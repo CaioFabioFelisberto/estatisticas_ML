@@ -19,15 +19,16 @@ Este projeto realiza uma análise estatística rigorosa de diferentes modelos de
 
 ```
 estatisticas/
-├── main.py                 # Script principal com análise completa
-├── requirements.txt        # Dependências do projeto
-├── models/                 # Pasta para armazenar modelos treinados
+├── main.py                      # Script principal com análise completa
+├── requirements.txt             # Dependências do projeto
+├── models/                      # Pasta para armazenar modelos treinados
 ├── src/
-│   ├── matriz.py          # Cálculo e visualização de matriz de confusão
-│   ├── scores.py          # Cálculo de métricas (Precision, Recall, F1-Score)
-│   ├── tuning.py          # Tuning de hiperparâmetros
-│   └── validacao.py       # Funções de validação e avaliação
-└── README.md              # Este arquivo
+│   ├── matriz.py               # Cálculo e visualização de matriz de confusão
+│   ├── scores.py               # Cálculo de métricas (Precision, Recall, F1-Score)
+│   ├── tuning.py               # Tuning de hiperparâmetros
+│   ├── validacao.py            # Funções de validação e avaliação
+│   └── rejeicao_combinacao.py  # Ensemble com reject option (confiança)
+└── README.md                    # Este arquivo
 ```
 
 ## 🛠️ Dependências
@@ -106,6 +107,13 @@ avaliar_baseline(X, y)
 best_model = otimizar_hiperparametros(X, y)
 ```
 
+**Testar Ensemble com Reject Option:**
+```bash
+python src/rejeicao_combinacao.py
+```
+
+Demonstra um ensemble combinando múltiplos classificadores com rejeição automática de amostras com baixa confiança.
+
 ## 📊 Pipeline de Análise
 
 ### 1. Geração de Dados
@@ -182,6 +190,17 @@ Funções utilitárias para validação:
 - `avaliar_baseline()`: Executa K-Fold simples
 - `otimizar_hiperparametros()`: Grid Search
 - `comparar_algoritmos()`: ANOVA e Tukey
+
+### `src/rejeicao_combinacao.py`
+Demonstra técnica de **Ensemble com Reject Option** (opção de rejeição):
+- **Ensemble Soft Voting**: Combina 3 classificadores (LogisticRegression, RandomForestClassifier, KNeighborsClassifier)
+- **Reject Option**: Implementa limiar de confiança (70% por padrão)
+- **Funcionamento**:
+  - Calcula probabilidades do ensemble para cada classe
+  - Obtém a confiança máxima (probabilidade da classe predita)
+  - Se confiança ≥ limiar: Classifica normalmente
+  - Se confiança < limiar: Rejeita a amostra (-1) para análise manual/secundária
+- **Saída**: Tabela com probabilidades, predições e taxa de rejeição
 
 ## 🔍 Interpretação dos Resultados
 
